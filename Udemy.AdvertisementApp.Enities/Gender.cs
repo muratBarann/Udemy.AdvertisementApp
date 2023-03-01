@@ -9,6 +9,6 @@ namespace Udemy.AdvertisementApp.Enities
     public class Gender : BaseEntity
     {
         public string Definition { get; set; }
-        public List<AppUser> Users { get; set; }
+        public List<AppUser> AppUsers { get; set; }
     }
 }

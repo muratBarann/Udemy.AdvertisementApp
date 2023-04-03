@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Udemy.AdvertisementApp.DataAccess.Configurations;
 using Udemy.AdvertisementApp.Enities;
 
 namespace Udemy.AdvertisementApp.DataAccess.Contexts
@@ -27,6 +28,22 @@ namespace Udemy.AdvertisementApp.DataAccess.Contexts
         DbSet<Gender> Genders { get; set; }
         DbSet<MilitaryStatus> MilitaryStatuses { get; set; }
         DbSet<ProvidedServices> ProvidedServices { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AdvertisementAppUserConfiguration());
+            modelBuilder.ApplyConfiguration(new AdvertisementAppUserStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new AdvertisementConfiguration());
+            modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
+            modelBuilder.ApplyConfiguration(new AppUserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new GenderConfiguration());
+            modelBuilder.ApplyConfiguration(new MilitaryStatusConfiguration());
+            modelBuilder.ApplyConfiguration(new ProvidedServicesConfiguration());
+            
+        }
+
+
 
     }
 }

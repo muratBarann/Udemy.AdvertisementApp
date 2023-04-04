@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Udemy.AdvertisementApp.Business.AutoMapper;
 using Udemy.AdvertisementApp.Business.ValidationRules;
 using Udemy.AdvertisementApp.DataAccess.Contexts;
 using Udemy.AdvertisementApp.DataAccess.UnitOfWork;
@@ -27,7 +28,8 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
 
             var mapperConfiguration = new MapperConfiguration(opt =>
             {
-
+                //yazdığımız dto'ların mapleme işlemlerini burada hallederiyoruz.
+                opt.AddProfile(new ProvidedServiceProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();

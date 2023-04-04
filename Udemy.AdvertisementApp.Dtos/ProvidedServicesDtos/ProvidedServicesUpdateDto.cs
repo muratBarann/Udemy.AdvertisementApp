@@ -8,7 +8,7 @@ using Udemy.AdvertisementApp.Dtos.Interfaces;
 
 namespace Udemy.AdvertisementApp.Dtos.ProvidedServicesDtos
 {
-    public class ProvidedServicesUpdateDto : IDto
+    public class ProvidedServicesUpdateDto : IUpdateDto
     {
         public int Id { get; set; }
         public string Title { get; set; }

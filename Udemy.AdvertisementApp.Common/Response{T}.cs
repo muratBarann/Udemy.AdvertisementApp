@@ -9,24 +9,24 @@ namespace Udemy.AdvertisementApp.Common
     //BU response turu data tasiyan turudur.
     public class Response<T> : Response , IResponse<T>
     {
+        public T Data { get; set; }
 
-        //Burada responseType ve message'ı datasız bir sekilde base class'a gonderdik
-        public Response(ResponseType responseType,string message) : base(responseType,message) 
+        public List<CustomValidationError> ValidationErrors { get; set; }
+        public Response(ResponseType responseType, string message) : base(responseType, message)
         {
+
         }
 
-        public Response(ResponseType responseType, T data): base(responseType)
+        public Response(ResponseType responseType, T data) : base(responseType)
         {
             Data = data;
         }
 
         public Response(T data, List<CustomValidationError> errors) : base(ResponseType.ValidationError)
         {
-            Data=data;
-            ValidationError = errors;
+            ValidationErrors = errors;
+            Data = data;
         }
 
-        public T Data { get; set; }
-        public List<CustomValidationError> ValidationError{ get; set; }
     }
 }

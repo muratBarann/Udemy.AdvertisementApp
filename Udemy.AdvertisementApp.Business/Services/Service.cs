@@ -11,12 +11,13 @@ using Udemy.AdvertisementApp.Common;
 using Udemy.AdvertisementApp.DataAccess.UnitOfWork;
 using Udemy.AdvertisementApp.Dtos.Interfaces;
 using Udemy.AdvertisementApp.Enities;
+using Udemy.AdvertisementApp.Business.Extensions;
 
 namespace Udemy.AdvertisementApp.Business.Services
 {
     public class Service<CreateDto, UpdateDto, ListDto, T> : IService<CreateDto, UpdateDto, ListDto, T>
         where CreateDto : class, IDto, new()
-        where UpdateDto : class, IDto, new()
+        where UpdateDto : class, IUpdateDto, new()
         where ListDto : class, IDto, new()
         where T : BaseEntity
     {
@@ -26,9 +27,12 @@ namespace Udemy.AdvertisementApp.Business.Services
         private readonly IValidator<CreateDto> _createDtoValidator;
         private readonly IValidator<UpdateDto> _updateDtoValidator;
 
-        public Service(IValidator<UpdateDto> updateDtoValidator)
+        public Service(IMapper mapper, IValidator<CreateDto> createDtoValidator, IValidator<UpdateDto> updateDtoValidator, IUow uow)
         {
+            _mapper = mapper;
+            _createDtoValidator = createDtoValidator;
             _updateDtoValidator = updateDtoValidator;
+            _uow = uow;
         }
 
         public async Task<IResponse<CreateDto>> CreateAsync(CreateDto dto)
@@ -40,7 +44,7 @@ namespace Udemy.AdvertisementApp.Business.Services
                 await _uow.GetRepostiory<T>().CreateAsync(createdEntity);
                 return new Response<CreateDto>(ResponseType.Success,dto);
             }
-            return new Response<CreateDto>(dto,new());
+            return new Response<CreateDto>(dto,result.ConvertToCustomValidationError());
         }
 
         public Task<IResponse<List<ListDto>>> GetAllAsync()

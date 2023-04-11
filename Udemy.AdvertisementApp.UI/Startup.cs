@@ -18,7 +18,7 @@ namespace Udemy.AdvertisementApp.UI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
 
-        public IConfiguration Configuration{ get; set; }
+        public IConfiguration Configuration { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,6 +28,7 @@ namespace Udemy.AdvertisementApp.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDependencies(Configuration);
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,14 +39,13 @@ namespace Udemy.AdvertisementApp.UI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

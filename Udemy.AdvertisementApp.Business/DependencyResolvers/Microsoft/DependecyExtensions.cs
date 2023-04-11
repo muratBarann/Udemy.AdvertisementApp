@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Business.AutoMapper;
+using Udemy.AdvertisementApp.Business.Interfaces;
+using Udemy.AdvertisementApp.Business.Services;
 using Udemy.AdvertisementApp.Business.ValidationRules;
 using Udemy.AdvertisementApp.DataAccess.Contexts;
 using Udemy.AdvertisementApp.DataAccess.UnitOfWork;
@@ -39,6 +41,8 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
             //Burada Dto'ların validatorlarının bağımlılıklarını(dependency) yapıyoruz
             services.AddTransient<IValidator<ProvidedServiceCreateDto>,ProvidedServicesCreateDtoValidator>();
             services.AddTransient<IValidator<ProvidedServicesUpdateDto>, ProvidedServicesUpdateDtoValidator>();
+
+            services.AddScoped<IProvidedService, ProvidedServiceService>();
         }
     }
 }

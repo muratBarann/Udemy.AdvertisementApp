@@ -8,10 +8,12 @@ namespace Udemy.AdvertisementApp.UI.Controllers
     public class HomeController : Controller
     {
         private readonly IProvidedService _providedService;
+        private readonly IAdvertisementService _advertisementService;
 
-        public HomeController(IProvidedService providedService)
+        public HomeController(IProvidedService providedService, IAdvertisementService advertisementService)
         {
             _providedService = providedService;
+            _advertisementService = advertisementService;
         }
 
         public async Task<IActionResult> Index()
@@ -19,5 +21,12 @@ namespace Udemy.AdvertisementApp.UI.Controllers
             var response = await _providedService.GetAllAsync();
             return this.ResponseView(response);
         }
+
+        public async Task<IActionResult> HumanResource()
+        {
+            var response= await _advertisementService.GetActiveAsync();
+            return this.ResponseView(response);
+        }
+
     }
 }

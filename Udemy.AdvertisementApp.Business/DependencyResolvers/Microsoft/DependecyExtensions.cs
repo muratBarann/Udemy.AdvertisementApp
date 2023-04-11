@@ -32,6 +32,7 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
             {
                 //yazdığımız dto'ların mapleme işlemlerini burada hallederiyoruz.
                 opt.AddProfile(new ProvidedServiceProfile());
+                opt.AddProfile(new AdvertisementServiceProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();
@@ -41,8 +42,11 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
             //Burada Dto'ların validatorlarının bağımlılıklarını(dependency) yapıyoruz
             services.AddTransient<IValidator<ProvidedServiceCreateDto>,ProvidedServicesCreateDtoValidator>();
             services.AddTransient<IValidator<ProvidedServicesUpdateDto>, ProvidedServicesUpdateDtoValidator>();
+            services.AddTransient<IValidator<AdvertisementCreateDto>, AdvertisementCreateDtoValidator>();
+            services.AddTransient<IValidator<AdvertisementUpdateDto>, AdvertisementUpdateDtoValidator>();
 
             services.AddScoped<IProvidedService, ProvidedServiceService>();
+            services.AddScoped<IAdvertisementService, AdvertisementService>();
         }
     }
 }

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images - Copy\" />
     <Folder Include="wwwroot\themes\startbootstrap-one-page-wonder-gh-pages\assets\img\images\" />
   </ItemGroup>
 

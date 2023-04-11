@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Business.Interfaces;
 using Udemy.AdvertisementApp.DataAccess.UnitOfWork;
-using Udemy.AdvertisementApp.Dtos.ProvidedServicesDtos;
+using Udemy.AdvertisementApp.Dtos;
 using Udemy.AdvertisementApp.Enities;
 
 namespace Udemy.AdvertisementApp.Business.Services

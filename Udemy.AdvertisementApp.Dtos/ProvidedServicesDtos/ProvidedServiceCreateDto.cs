@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Dtos.Interfaces;
 
-namespace Udemy.AdvertisementApp.Dtos.ProvidedServicesDtos
+namespace Udemy.AdvertisementApp.Dtos
 {
     public class ProvidedServiceCreateDto : IDto
     {

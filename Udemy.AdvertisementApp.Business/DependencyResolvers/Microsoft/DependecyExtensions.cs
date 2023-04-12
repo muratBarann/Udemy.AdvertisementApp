@@ -33,6 +33,8 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
                 //yazdığımız dto'ların mapleme işlemlerini burada hallederiyoruz.
                 opt.AddProfile(new ProvidedServiceProfile());
                 opt.AddProfile(new AdvertisementServiceProfile());
+                opt.AddProfile(new AppUserProfile());
+                opt.AddProfile(new GenderProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();
@@ -44,9 +46,15 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
             services.AddTransient<IValidator<ProvidedServicesUpdateDto>, ProvidedServicesUpdateDtoValidator>();
             services.AddTransient<IValidator<AdvertisementCreateDto>, AdvertisementCreateDtoValidator>();
             services.AddTransient<IValidator<AdvertisementUpdateDto>, AdvertisementUpdateDtoValidator>();
+            services.AddTransient<IValidator<AppUserCreateDto>, AppUserCreateDtoValidator>();
+            services.AddTransient<IValidator<AppUserUpdateDto>, AppUserUpdateDtoValidator>();
+            services.AddTransient<IValidator<GenderCreateDto>, GenderCreateDtoValidator>();
+            services.AddTransient<IValidator<GenderUpdateDto>, GenderUpdateDtoValidator>();
 
             services.AddScoped<IProvidedService, ProvidedServiceService>();
             services.AddScoped<IAdvertisementService, AdvertisementService>();
+            services.AddScoped<IAppUserService,AppUserService>();
+            services.AddScoped<IGenderService,GenderService>();
         }
     }
 }

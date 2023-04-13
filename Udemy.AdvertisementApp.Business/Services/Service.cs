@@ -42,6 +42,7 @@ namespace Udemy.AdvertisementApp.Business.Services
             {
                 var createdEntity = _mapper.Map<T>(dto);
                 await _uow.GetRepostiory<T>().CreateAsync(createdEntity);
+                await _uow.SaveChangesAsync();
                 return new Response<CreateDto>(ResponseType.Success, dto);
             }
             return new Response<CreateDto>(dto, result.ConvertToCustomValidationError());
@@ -70,6 +71,7 @@ namespace Udemy.AdvertisementApp.Business.Services
             if (data == null)
                 return new Response(ResponseType.NotFound, $"{id}'sine sahip data bulunamadı");
             _uow.GetRepostiory<T>().Remove(data);
+            await _uow.SaveChangesAsync();
             return new Response(ResponseType.Success);
         }
 
@@ -85,6 +87,7 @@ namespace Udemy.AdvertisementApp.Business.Services
 
                 var entity = _mapper.Map<T>(dto);
                 _uow.GetRepostiory<T>().Update(entity, unchangedData);
+                await _uow.SaveChangesAsync();
                 return new Response<UpdateDto>(ResponseType.Success, dto);
             }
 

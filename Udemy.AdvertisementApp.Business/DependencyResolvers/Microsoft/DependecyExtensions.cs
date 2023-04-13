@@ -26,19 +26,6 @@ namespace Udemy.AdvertisementApp.Business.DependencyResolvers.Microsoft
             {
                 opt.UseSqlServer(configuration.GetConnectionString("Local"));
             });
-
-
-            var mapperConfiguration = new MapperConfiguration(opt =>
-            {
-                //yazdığımız dto'ların mapleme işlemlerini burada hallederiyoruz.
-                opt.AddProfile(new ProvidedServiceProfile());
-                opt.AddProfile(new AdvertisementServiceProfile());
-                opt.AddProfile(new AppUserProfile());
-                opt.AddProfile(new GenderProfile());
-            });
-
-            var mapper = mapperConfiguration.CreateMapper();
-            services.AddSingleton(mapper);
             services.AddScoped<IUow, Uow>();
             
             //Burada Dto'ların validatorlarının bağımlılıklarını(dependency) yapıyoruz

@@ -1,8 +1,11 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Business.Interfaces;
+using Udemy.AdvertisementApp.Dtos;
+using Udemy.AdvertisementApp.UI.Extensions;
 using Udemy.AdvertisementApp.UI.Models;
 
 namespace Udemy.AdvertisementApp.UI.Controllers
@@ -11,11 +14,15 @@ namespace Udemy.AdvertisementApp.UI.Controllers
     {
         private readonly IGenderService _genderService;
         private readonly IValidator<UserCreateModel> _userCreateModelValidator;
+        private readonly IAppUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IGenderService genderService, IValidator<UserCreateModel> userCreateModelValidator)
+        public AccountController(IGenderService genderService, IValidator<UserCreateModel> userCreateModelValidator, IAppUserService userService, IMapper mapper)
         {
             _genderService = genderService;
             _userCreateModelValidator = userCreateModelValidator;
+            _userService = userService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> SignUp()
@@ -34,7 +41,9 @@ namespace Udemy.AdvertisementApp.UI.Controllers
             var result = _userCreateModelValidator.Validate(model);
             if (result.IsValid)
             {
-                return View(model);
+                var dto = _mapper.Map<AppUserCreateDto>(model);
+                var createResponse = await _userService.CreateWithRoleAsync(dto,2);
+                return this.ResponseRedirectAction(createResponse, "SignIn");
             }
             foreach (var error in result.Errors)
             {
@@ -44,6 +53,7 @@ namespace Udemy.AdvertisementApp.UI.Controllers
             var response =await _genderService.GetAllAsync();
             model.Genders = new SelectList(response.Data, "Id", "Definition",model.GenderId);
 
+            
             return View(model);
         }
     }

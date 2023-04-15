@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,18 @@ namespace Udemy.AdvertisementApp.UI
         {
             services.AddDependencies(Configuration);
             services.AddTransient<IValidator<UserCreateModel>, UserCreateModelValidator>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.Cookie.Name = "AdvertisementCookie";
+                options.Cookie.HttpOnly = true;                //clientside Scriptlerden korur
+                options.Cookie.SameSite = SameSiteMode.Strict;  //Cookie paylaþýma kapatýyoruz
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;      //http istek gelirse http, https ile istek gelirse https seklinde yanýt ver
+                options.ExpireTimeSpan = TimeSpan.FromDays(20);     //Cookie 20 gün ayakta kalsýn
+            }
+                
+            );
+
             services.AddControllersWithViews();
 
 
@@ -64,6 +77,9 @@ namespace Udemy.AdvertisementApp.UI
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

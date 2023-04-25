@@ -19,6 +19,7 @@ namespace Udemy.AdvertisementApp.Business.Helpers
                 new AdvertisementServiceProfile(),
                 new AppUserProfile(),
                 new GenderProfile(),
+                new AppRoleProfile(),
             };
         }
     }

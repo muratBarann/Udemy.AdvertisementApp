@@ -20,12 +20,14 @@ namespace Udemy.AdvertisementApp.Business.Services
         private readonly IMapper _mapper;
         private readonly IUow _uow;
         private readonly IValidator<AppUserCreateDto> _createValidator;
+        private readonly IValidator<AppUserLoginDto> _loginValidator;
 
-        public AppUserService(IMapper mapper, IValidator<AppUserCreateDto> createValidator, IValidator<AppUserUpdateDto> updateValidator, IUow uow) : base(mapper, createValidator, updateValidator, uow)
+        public AppUserService(IMapper mapper, IValidator<AppUserCreateDto> createValidator, IValidator<AppUserUpdateDto> updateValidator, IUow uow, IValidator<AppUserLoginDto> loginValidator) : base(mapper, createValidator, updateValidator, uow)
         {
             _uow = uow;
             _mapper = mapper;
             _createValidator = createValidator;
+            _loginValidator = loginValidator;
         }
 
         public async Task<IResponse<AppUserCreateDto>> CreateWithRoleAsync(AppUserCreateDto dto, int roleId)
@@ -58,6 +60,36 @@ namespace Udemy.AdvertisementApp.Business.Services
 
             }
             return new Response<AppUserCreateDto>(dto, validateResult.ConvertToCustomValidationError());
+        }
+
+        public async Task<IResponse<AppUserListDto>> CheckUserAsync(AppUserLoginDto dto)
+        {
+            var validationResult = _loginValidator.Validate(dto);
+            if(validationResult.IsValid)
+            {
+                var user = await _uow.GetRepostiory<AppUser>().GetByFilterAsync(x=>x.Username == dto.Username && x.Password == dto.Password);
+                if(user != null)
+                {
+                    var mappedData = _mapper.Map<AppUserListDto>(user);
+                    return new Response<AppUserListDto>(ResponseType.Success,mappedData);
+                }
+                return new Response<AppUserListDto>(ResponseType.NotFound, "Kullanıcı yada Şifre hatalı");
+            }
+
+            return new Response<AppUserListDto>(ResponseType.ValidationError, "Kullanıcı adı yada Şifre boş olamaz");
+        }
+
+        public async Task<IResponse<List<AppRoleListDto>>> GetRolesByIdAsync(int userId)
+        {
+            var roles = await _uow.GetRepostiory<AppRole>().GetAllAsync(x=>x.AppUserRoles.Any(x=>x.AppUserId == userId));
+
+            if(roles == null)
+            {
+                return new Response<List<AppRoleListDto>>(ResponseType.NotFound, "İlgili rol bulunamadı");
+            }
+
+            var dto = _mapper.Map<List<AppRoleListDto>>(roles);
+            return new Response<List<AppRoleListDto>>(ResponseType.Success, dto);
         }
 
     }

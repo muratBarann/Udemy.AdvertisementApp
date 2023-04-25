@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Business.Interfaces;
 using Udemy.AdvertisementApp.Common.Enums;
@@ -43,7 +47,7 @@ namespace Udemy.AdvertisementApp.UI.Controllers
             if (result.IsValid)
             {
                 var dto = _mapper.Map<AppUserCreateDto>(model);
-                var createResponse = await _userService.CreateWithRoleAsync(dto,(int)RoleType.Member);
+                var createResponse = await _userService.CreateWithRoleAsync(dto, (int)RoleType.Member);
                 return this.ResponseRedirectAction(createResponse, "SignIn");
             }
             foreach (var error in result.Errors)
@@ -51,11 +55,68 @@ namespace Udemy.AdvertisementApp.UI.Controllers
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             }
 
-            var response =await _genderService.GetAllAsync();
-            model.Genders = new SelectList(response.Data, "Id", "Definition",model.GenderId);
+            var response = await _genderService.GetAllAsync();
+            model.Genders = new SelectList(response.Data, "Id", "Definition", model.GenderId);
 
-            
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(AppUserLoginDto dto)
+        {
+            var response = await _userService.CheckUserAsync(dto);
+            if (response.ResponseType == Common.ResponseType.Success)
+            {
+                var roleResult = await _userService.GetRolesByIdAsync(response.Data.Id);
+
+                var claims = new List<Claim>
+                { };
+
+                if (roleResult.ResponseType == Common.ResponseType.Success)
+                {
+                    foreach (var role in roleResult.Data)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.Definition));
+                    }
+                }
+
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, response.Data.Id.ToString()));
+
+
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = dto.RememberMe,
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("Kulllanıcı adı veye şifre hatalı!", response.Message);
+
+            return View(dto);
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(
+    CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

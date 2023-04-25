@@ -44,6 +44,10 @@ namespace Udemy.AdvertisementApp.UI
                 options.Cookie.SameSite = SameSiteMode.Strict;  //Cookie paylaþýma kapatýyoruz
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;      //http istek gelirse http, https ile istek gelirse https seklinde yanýt ver
                 options.ExpireTimeSpan = TimeSpan.FromDays(20);     //Cookie 20 gün ayakta kalsýn
+                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/SignIn");
+                options.LogoutPath = new Microsoft.AspNetCore.Http.PathString("/Account/LogOut");
+                options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/AccessDenied");
+
             }
                 
             );

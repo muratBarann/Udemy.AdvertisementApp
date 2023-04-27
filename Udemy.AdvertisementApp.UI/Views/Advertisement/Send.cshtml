@@ -1,15 +1,73 @@
-﻿@model AdvertisementAppUserCreateModel
+﻿@using Udemy.AdvertisementApp.Common.Enums;
+@model AdvertisementAppUserCreateModel
 @{
     Layout = "_Layout";
 }
 
-<div class=" mb-3">
-    <form asp-action="Send" asp-controller="Advertisement" method="post">
+<div class="w-75 p-4 mx-auto mb-3">
+    <form asp-action="Send" asp-controller="Advertisement" method="post" enctype="multipart/form-data">
 
-        
-        <select asp-items="@ViewBag.MilitaryStatus" class="form-control form-select">
+        <input type="hidden" asp-for="@Model.AdvertisementId" />
+        <input type="hidden" asp-for="@Model.AppUserId" />
+        @if (ViewBag.GenderId == (int)GenderType.Erkek)
+        {
+            <div class="mb-3">  
+                <label>Askerlik Durumu : </label>
+                <select onchange="setInputVisibility()" asp-for="@Model.MilitaryStatusId" asp-items="@ViewBag.MilitaryStatus" class="form-control form-select">
+                </select>
+            </div>
 
-        </select>
+            <div id="divDate" class="mb-3" style="display:none">
+                <label>Askerlik Tecil Tarihi : </label>
+                <input type="date" asp-for="@Model.EndDate" class="form-control"/>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="@Model.MilitaryStatusId" value="@((int)MilitaryStatusType.Muaf)"/>
+        }
+
+        <div class="mb-3">
+            <label>İş Deneyiminiz : </label>
+            <input type="number" asp-for="@Model.WorkExperience"/>
+        </div>
+
+        <div class="mb-3">
+            <label>Cv : </label>
+            <input type="file" asp-for="@Model.CvPath" class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-outline-danger" >Gönder</button>
+        </div>
+
+        <div asp-validation-summary="All"  class="text-danger">
+
+        </div>
 
     </form>
 </div>
+
+@section script{
+
+
+    <script>
+        function setInputVisibility() {
+            var militaryStatus = document.getElementById("MilitaryStatusId");
+            var militaryStatusValue = militaryStatus.value;
+
+            var divDate = document.getElementById("divDate");
+
+            if (militaryStatusValue == 2) {
+                divDate.style.display = "block";
+            }
+            else {
+                divDate.style.display = "none";
+
+            }
+
+        }
+
+    </script>
+
+}

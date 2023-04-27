@@ -6,7 +6,7 @@ namespace Udemy.AdvertisementApp.UI.Extensions
 {
     public static class ControllerExtension
     {
-        public static IActionResult ResponseRedirectAction<T>(this Controller controller, IResponse<T> response, string actionName)
+        public static IActionResult ResponseRedirectAction<T>(this Controller controller, IResponse<T> response, string actionName, string controllerName = "")
         {
             if (response.ResponseType == ResponseType.NotFound)
                 return controller.NotFound();
@@ -17,7 +17,14 @@ namespace Udemy.AdvertisementApp.UI.Extensions
                     controller.ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
             }
-            return controller.RedirectToAction(actionName);
+            if (string.IsNullOrWhiteSpace(controllerName))
+            {
+                return controller.RedirectToAction(actionName);
+            }
+            else
+            {
+                return controller.RedirectToAction(actionName, controllerName);
+            }
         }
 
         public static IActionResult ResponseView<T>(this Controller controller, IResponse<T> response)

@@ -12,7 +12,7 @@ using Udemy.AdvertisementApp.Enities;
 
 namespace Udemy.AdvertisementApp.Business.Services
 {
-    public class ProvidedServiceService :Service<ProvidedServiceCreateDto,ProvidedServicesUpdateDto,ProvidedServicesListDto,ProvidedServices>,IProvidedService
+    public class ProvidedServiceService : Service<ProvidedServiceCreateDto,ProvidedServicesUpdateDto,ProvidedServicesListDto,ProvidedServices>,IProvidedService
     {
         public ProvidedServiceService(IMapper mapper,IUow uow,IValidator<ProvidedServiceCreateDto> createDtoValidator, IValidator<ProvidedServicesUpdateDto> updateDtoValidator) : base(mapper,createDtoValidator,updateDtoValidator, uow)
         {

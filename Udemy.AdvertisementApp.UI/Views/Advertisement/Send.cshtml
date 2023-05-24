@@ -11,7 +11,7 @@
         <input type="hidden" asp-for="@Model.AppUserId" />
         @if (ViewBag.GenderId == (int)GenderType.Erkek)
         {
-            <div class="mb-3">
+            <div class="mb-3">  
                 <label>Askerlik Durumu : </label>
                 <select onchange="setInputVisibility()" asp-for="@Model.MilitaryStatusId" asp-items="@ViewBag.MilitaryStatus" class="form-control form-select">
                 </select>
@@ -19,29 +19,30 @@
 
             <div id="divDate" class="mb-3" style="display:none">
                 <label>Askerlik Tecil Tarihi : </label>
-                <input type="date" asp-for="@Model.EndDate" class="form-control" />
+                <input type="date" asp-for="@Model.EndDate" class="form-control"/>
             </div>
         }
         else
         {
-            <input type="hidden" asp-for="@Model.MilitaryStatusId" value="@((int)MilitaryStatusType.Muaf)" />
+            <input type="hidden" asp-for="@Model.MilitaryStatusId" value="@((int)MilitaryStatusType.Muaf)"/>
         }
 
         <div class="mb-3">
             <label>İş Deneyiminiz : </label>
-            <input type="number" asp-for="@Model.WorkExperience" />
+            <input type="number" asp-for="@Model.WorkExperience"/>
         </div>
 
         <div class="mb-3">
             <label>Cv : </label>
-            <input type="file" asp-for="@Model.CvPath" class="form-control" />
+            <input type="file" asp-for="@Model.CvPath" class="form-control"/>
         </div>
 
         <div class="mb-3">
-            <button type="submit" class="btn btn-outline-danger">Gönder</button>
+            <button type="submit" class="btn btn-outline-danger" >Gönder</button>
         </div>
 
-        <div asp-validation-summary="All" class="text-danger">
+        <div asp-validation-summary="All"  class="text-danger">
+
         </div>
 
     </form>
@@ -51,7 +52,7 @@
 
 
     <script>
-        setInputVisiblity();
+        setInputVisibility();
         function setInputVisibility() {
             var militaryStatus = document.getElementById("MilitaryStatusId");
             var militaryStatusValue = militaryStatus.value;

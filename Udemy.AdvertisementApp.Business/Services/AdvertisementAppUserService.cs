@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Udemy.AdvertisementApp.Business.Extensions;
 using Udemy.AdvertisementApp.Business.Interfaces;
 using Udemy.AdvertisementApp.Common;
+using Udemy.AdvertisementApp.Common.Enums;
 using Udemy.AdvertisementApp.DataAccess.UnitOfWork;
 using Udemy.AdvertisementApp.Dtos;
 using Udemy.AdvertisementApp.Enities;
@@ -54,5 +56,23 @@ namespace Udemy.AdvertisementApp.Business.Services
             }
             return new Response<AdvertisementAppUserCreateDto>(dto, result.ConvertToCustomValidationError());
         }
+
+        public async Task<List<AdvertisemetAppUserListDto>> GetList(AdvertisementAppUserStatusType type)
+        {
+            var query = _uow.GetRepostiory<AdvertisementAppUser>().GetQuery();
+            var list = await query.Include(x => x.Advertisement).Include(x => x.AppUser).Include(x => x.AdvertisementAppUserStatus).Include(x => x.MilitaryStatus).Include(x=>x.AppUser.Gender).Where(x => x.AdvertisementAppUserStatusId == (int)type).ToListAsync();
+
+            return _mapper.Map<List<AdvertisemetAppUserListDto>>(list);
+
+        }
+
+        public async Task SetStatus(int advertisementAppUserId, AdvertisementAppUserStatusType type)
+        {
+            var query = _uow.GetRepostiory<AdvertisementAppUser>().GetQuery();
+            var entity =  await query.SingleOrDefaultAsync(x=>x.Id == advertisementAppUserId);
+            entity.AdvertisementAppUserStatusId = (int)type;
+            await _uow.SaveChangesAsync();
+        }
+
     }
 }

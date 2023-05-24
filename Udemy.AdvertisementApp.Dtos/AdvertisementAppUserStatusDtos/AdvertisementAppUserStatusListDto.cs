@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Udemy.AdvertisementApp.Entities
+namespace Udemy.AdvertisementApp.Dtos.AdvertisementAppUserStatusDtos
 {
-    public class MilitaryStatus : BaseEntity
+    public class AdvertisementAppUserStatusListDto
     {
         public string Definition { get; set; }
-
-        public List<AdvertisementAppUser> AdvertisementAppUsers { get; set; }
     }
 }

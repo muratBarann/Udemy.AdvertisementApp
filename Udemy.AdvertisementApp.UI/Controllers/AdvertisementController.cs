@@ -93,6 +93,7 @@ namespace Udemy.AdvertisementApp.UI.Controllers
                 {
                     ModelState.AddModelError(error.ErrorMessage, error.PropertyName);
                 }
+
                 var userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                 var userResponse = await _appUserService.GetByIdAsync<AppUserListDto>(userId);
                 ViewBag.GenderId = userResponse.Data.GenderId;
@@ -112,6 +113,7 @@ namespace Udemy.AdvertisementApp.UI.Controllers
 
                 ViewBag.MilitaryStatus = new SelectList(list, "Id", "Definition");
 
+
                 return View(model);
             }
 
@@ -119,8 +121,37 @@ namespace Udemy.AdvertisementApp.UI.Controllers
             {
                 return RedirectToAction("HumanResource", "Home");
             }
-
         }
+
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> List()
+        {
+            var list = await _advertisementAppUserService.GetList(AdvertisementAppUserStatusType.Başvurdu);
+            return View(list);
+        }
+
+
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> SetStatus(int advertisementAppUserId, AdvertisementAppUserStatusType type)
+        {
+            await _advertisementAppUserService.SetStatus(advertisementAppUserId, type);
+            return RedirectToAction("List");
+        }
+
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> ApprovedList()
+        {
+            var listOfApproved = await _advertisementAppUserService.GetList(AdvertisementAppUserStatusType.Mülakat);
+            return View(listOfApproved);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RejectedList()
+        {
+            var listOfRejected = await _advertisementAppUserService.GetList(AdvertisementAppUserStatusType.Olumsuz);
+            return View(listOfRejected);
+        }
+
     }
 
 }

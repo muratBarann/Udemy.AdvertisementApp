@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Udemy.AdvertisementApp.UI.props" />
-</Project>
